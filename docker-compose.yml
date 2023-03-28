@@ -1,0 +1,62 @@
+version: "3"
+services:
+  laravel-docker:
+    container_name: laravel-docker
+    build: .
+    volumes:
+      - ./my_laravel_app:/var/www/html
+    ports:
+      - 80:80
+  
+  mysql_db:
+    image: mysql:latest
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      TZ: Europe/Budapest
+    ports:
+      - 3306:3306
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    restart: always
+    ports:
+      - 8001:80
+    environment:
+      PMA_PASSWORD: root
+      PMA_HOST: mysql_db
+      PMA_PORT: 3306
+      TZ: Europe/Budapest
+    links:
+      - mysql_db:mysql_db
+
+  #mongo:
+  #  image: mongo:3.8
+  #  container_name: mongo
+  #  environment:
+  #      - MONGO_INITDB_ROOT_USERNAME=root
+  #      - MONGO_INITDB_ROOT_PASSWORD=password
+  #  restart: unless-stopped
+  #  ports:
+  #    - "27017:27017"
+  #  volumes:
+  #    - ./my_database/mongodb/db:/data/db
+  #    - ./my_database/mongodb/dev.archive:/Databases/dev.archive
+  #    - ./my_database/mongodb/production:/Databases/production
+  #  command: [--auth]
+#
+  #mongo-express:
+  #  image: mongo-express
+  #  container_name: mexpress
+  #  environment:
+  #    - ME_CONFIG_MONGODB_ADMINUSERNAME=root
+  #    - ME_CONFIG_MONGODB_ADMINPASSWORD=password
+  #    - ME_CONFIG_MONGODB_URL=mongodb://root:password@mongo:27017/?authSource=admin
+  #    - ME_CONFIG_BASICAUTH_USERNAME=mexpress
+  #    - ME_CONFIG_BASICAUTH_PASSWORD=mexpress
+  #  links:
+  #    - mongo
+  #  restart: unless-stopped
+  #  ports:
+  #    - "8081:8081"
