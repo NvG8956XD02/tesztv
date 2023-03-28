@@ -14,3 +14,7 @@ composer-update:
 data:
 	docker exec laravel-docker bash -c "php artisan migrate"
 	docker exec laravel-docker bash -c "php artisan db:seed"
+win-run:
+	docker exec laravel-docker bash -c "composer update"
+	cp .\my_laravel_app\.env.example .\my_laravel_app\.env
+	docker exec laravel-docker bash -c "php artisan key:generate"
